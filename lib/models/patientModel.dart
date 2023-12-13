@@ -4,6 +4,7 @@ class patientModel {
   String? id;
   final String name;
   final String lastname;
+  final String age;
   final String CIN;
   final String phone;
   final String firstVisited;
@@ -18,6 +19,7 @@ class patientModel {
     required this.lastname,
     required this.firstVisited,
     required this.disease,
+    required this.age,
     required this.CIN,
   });
   Map<String, dynamic> toJson() => {
@@ -27,6 +29,7 @@ class patientModel {
         'lastname': lastname,
         'firstvisted': firstVisited,
         'disease': disease,
+        'age': age,
         'CIN': CIN,
         //'image': image,
       };
@@ -38,6 +41,7 @@ class patientModel {
       firstVisited: json['firstvisted'],
       disease: json['disease'],
       image: json['image'],
+      age: json['age'],
       CIN: json['CIN']);
 
   patientModel.fromSnapshot(DocumentSnapshot snapshot)
@@ -48,5 +52,6 @@ class patientModel {
         firstVisited = snapshot['firstvisted'],
         disease = snapshot['disease'],
         image = snapshot['image'],
+        age = snapshot['age'],
         CIN = snapshot['CIN'];
 }

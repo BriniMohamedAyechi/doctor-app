@@ -229,14 +229,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future createUser() async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc();
-    // You can customize this part based on your userModel
-    final json = {
-      'id': docUser.id,
-      'name': _nameController.text.trim(),
-      'phone': _phoneController.text.trim(),
-    };
-    await docUser.set(json);
+  Future<void> createUser() async {
+    try {
+      // Get the current authenticated user
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        // Handle the case where there is no authenticated user
+        print('No authenticated user');
+        return;
+      }
+
+      // Use the UID as the document ID
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+
+      // You can customize this part based on your userModel
+      final json = {
+        'id': currentUser.uid,
+        'name': _nameController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'email': _emailController.text.trim(),
+      };
+
+      await docUser.set(json);
+    } catch (error) {
+      // Handle errors
+      print('Error creating user: $error');
+    }
   }
 }

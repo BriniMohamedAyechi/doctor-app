@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:healthcare/constants/constants.dart';
 import 'package:healthcare/models/scheduleModel.dart'; // Import your schedule model
 
-class DiscussionInfoDetail extends StatelessWidget {
-  const DiscussionInfoDetail({Key? key, required this.schedule})
+class DiscussionInfoDetailSecretary extends StatelessWidget {
+  const DiscussionInfoDetailSecretary({Key? key, required this.schedule})
       : super(key: key);
 
   final scheduleModel schedule;
@@ -34,6 +34,13 @@ class DiscussionInfoDetail extends StatelessWidget {
                     style: TextStyle(
                       color: textColor,
                       fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'Phone: ${schedule.phone}',
+                    style: TextStyle(
+                      color: textColor.withOpacity(0.5),
+                      fontSize: 13,
                     ),
                   ),
                   Text(

@@ -9,7 +9,7 @@ class Users extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 500,
       width: double.infinity,
       padding: EdgeInsets.all(appPadding),
       decoration: BoxDecoration(
@@ -20,15 +20,15 @@ class Users extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Users",
+            "Calendar",
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 15,
+              fontSize: 20,
               color: textColor,
             ),
           ),
           Expanded(
-            child: BarChartUsers(),
+            child: CalendarView(),
           )
         ],
       ),

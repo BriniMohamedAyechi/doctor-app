@@ -13,6 +13,7 @@ const purple = Color.fromRGBO(165, 80, 179, 1);
 const orange = Color.fromRGBO(251, 137, 13, 1);
 const green = Color.fromRGBO(51, 173, 127, 1);
 const red = Colors.red;
+const hoverColor = Colors.blue;
 
 // Default App Padding
 const appPadding = 16.0;

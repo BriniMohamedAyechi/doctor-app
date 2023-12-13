@@ -14,10 +14,12 @@ class schedulList extends StatefulWidget {
 }
 
 class _PatientFormState extends State<schedulList> {
-  DateTime? selectedDate;
+  DateTime? _selectedDate;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+
   TextEditingController _timeController = TextEditingController();
   TextEditingController _confirmedController = TextEditingController();
   final CollectionReference schedulesCollection =
@@ -105,8 +107,10 @@ class _PatientFormState extends State<schedulList> {
                     cursorColor: Color(0xFF0074d9),
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
-                        // Your search bar decoration
-                        ),
+                      hintText: 'Search by Name',
+
+                      // Your search bar decoration
+                    ),
                   ),
                   SizedBox(height: 20),
                   Row(
@@ -191,7 +195,7 @@ class _PatientFormState extends State<schedulList> {
                     ],
                   ),
                   child: Container(
-                    height: 200,
+                    height: 230,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Row(
@@ -241,6 +245,24 @@ class _PatientFormState extends State<schedulList> {
                                       SizedBox(width: 5),
                                       Text(
                                         "${schedule.time}",
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.phone,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "${schedule.phone}",
                                         style: TextStyle(
                                           color: Colors.black54,
                                         ),
@@ -360,7 +382,7 @@ class _PatientFormState extends State<schedulList> {
 
   Future<void> _showMyDialog(BuildContext context) async {
     TextEditingController _nameController = TextEditingController();
-    TextEditingController _dateController = TextEditingController();
+    TextEditingController _phoneController = TextEditingController();
     TextEditingController _timeController = TextEditingController();
     TextEditingController _confirmedController = TextEditingController();
     final CollectionReference schedulesCollection =
@@ -377,7 +399,7 @@ class _PatientFormState extends State<schedulList> {
           )),
           content: Container(
             width: 300, // Adjust the width as needed
-            height: 280,
+            height: 320,
             child: Column(
               children: [
                 TextFormField(
@@ -424,6 +446,26 @@ class _PatientFormState extends State<schedulList> {
                 SizedBox(
                   height: 20,
                 ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Color(0xFF0074d9)),
+                    ),
+                    hintText: "Patient Phone",
+                    icon: Icon(Icons.phone, size: 20, color: Color(0xFF0074d9)),
+                    fillColor: Colors.white,
+                    filled: true,
+                    enabled: true,
+                    contentPadding: const EdgeInsets.only(
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
                 TextFormField(
                   controller: _timeController,
                   decoration: InputDecoration(
@@ -471,26 +513,40 @@ class _PatientFormState extends State<schedulList> {
             ),
             TextButton(
               onPressed: () async {
-                {
-                  try {
-                    // Assuming you want to update the document where the 'person_name' is equal to a specific value
-                    String fieldName = 'person_name';
-                    String fieldValue = _nameController.text.trim();
+                try {
+                  // Assuming you want to update the document where the 'person_name' is equal to a specific value
+                  String fieldName = 'person_name';
+                  String fieldValue = _nameController.text.trim();
 
-                    // Query to find the document
-                    QuerySnapshot querySnapshot = await schedulesCollection
-                        .where(fieldName, isEqualTo: fieldValue)
-                        .get();
+                  // Query to find the document
+                  QuerySnapshot querySnapshot = await schedulesCollection
+                      .where(fieldName, isEqualTo: fieldValue)
+                      .get();
 
-                    // Check if the document exists
-                    if (querySnapshot.docs.isNotEmpty) {
-                      // Get the first document (you can adjust this logic based on your requirements)
-                      DocumentSnapshot documentSnapshot =
-                          querySnapshot.docs.first;
+                  // Check if the document exists
+                  if (querySnapshot.docs.isNotEmpty) {
+                    // Get the first document (you can adjust this logic based on your requirements)
+                    DocumentSnapshot documentSnapshot =
+                        querySnapshot.docs.first;
 
+                    // Check if the chosen time already exists on the selected date
+                    bool isTimeAlreadyScheduled = await schedulesCollection
+                        .where('date', isEqualTo: _dateController.text.trim())
+                        .where('time', isEqualTo: _timeController.text.trim())
+                        .where(FieldPath.documentId,
+                            isNotEqualTo: documentSnapshot.id)
+                        .get()
+                        .then((scheduleSnapshot) =>
+                            scheduleSnapshot.docs.isNotEmpty);
+
+                    if (isTimeAlreadyScheduled) {
+                      // Show a warning that the time is already scheduled
+                      _showTimeAlreadyScheduledWarning(context);
+                    } else {
                       // Create a Map with the fields to update
                       Map<String, dynamic> fieldsToUpdate = {
                         'date': _dateController.text.trim(),
+                        'phone': _phoneController.text.trim(),
                         'time': _timeController.text.trim(),
                         'confirmed': _confirmedController.text.trim(),
                       };
@@ -499,14 +555,15 @@ class _PatientFormState extends State<schedulList> {
                       await documentSnapshot.reference.update(fieldsToUpdate);
 
                       print('Document updated successfully.');
-                    } else {
-                      print('Document not found.');
+                      Navigator.of(context).pop();
                     }
-                  } catch (e) {
-                    print('Error updating document: $e');
+                  } else {
+                    print('Document not found.');
+                    Navigator.of(context).pop();
                   }
+                } catch (e) {
+                  print('Error updating document: $e');
                 }
-                Navigator.of(context).pop();
               },
               child: Text('OK'),
             ),
@@ -522,12 +579,17 @@ class _PatientFormState extends State<schedulList> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Center(
-              child: Text('Create Schedule',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Color(0xFF0074d9)))),
+            child: Text(
+              'Create Schedule',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0074d9),
+              ),
+            ),
+          ),
           content: Container(
             width: 400,
-            height: 300,
+            height: 320,
             child: Column(
               children: [
                 TextFormField(
@@ -544,7 +606,30 @@ class _PatientFormState extends State<schedulList> {
                     filled: true,
                     enabled: true,
                     contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Color(0xFF0074d9)),
+                    ),
+                    hintText: "Patient Phone",
+                    icon: Icon(Icons.phone, size: 20, color: Color(0xFF0074d9)),
+                    fillColor: Colors.white,
+                    filled: true,
+                    enabled: true,
+                    contentPadding: const EdgeInsets.only(
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -568,7 +653,10 @@ class _PatientFormState extends State<schedulList> {
                     filled: true,
                     enabled: true,
                     contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -586,7 +674,10 @@ class _PatientFormState extends State<schedulList> {
                     filled: true,
                     enabled: true,
                     contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -604,7 +695,10 @@ class _PatientFormState extends State<schedulList> {
                     filled: true,
                     enabled: true,
                     contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
+                      left: 14.0,
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                   ),
                 ),
               ],
@@ -618,31 +712,89 @@ class _PatientFormState extends State<schedulList> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                    color: Color(0xFF0074d9), fontWeight: FontWeight.bold),
+                  color: Color(0xFF0074d9),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             TextButton(
               onPressed: () async {
-                await createSchedule().whenComplete(() async {
-                  DocumentSnapshot snap = await FirebaseFirestore.instance
-                      .collection("usertokens")
-                      .doc("user1")
-                      .get();
+                // Check if the time is already scheduled
+                bool isTimeAlreadyScheduled = await checkIfTimeAlreadyScheduled(
+                    _timeController.text.trim(), _dateController.text.trim());
 
-                  String token = snap['token'];
-                  print("HELLO:${token}");
+                if (isTimeAlreadyScheduled) {
+                  // Show a warning that the time is already scheduled
+                  _showTimeAlreadyScheduledWarning(context);
+                } else {
+                  // Create the schedule if the time is not already scheduled
+                  await createSchedule().whenComplete(() async {
+                    DocumentSnapshot snap = await FirebaseFirestore.instance
+                        .collection("usertokens")
+                        .doc("user1")
+                        .get();
 
-                  sendPushMessage(
-                      token,
-                      "You have a new Appoitment Details : ${_nameController.text.trim()}, Date: ${_dateController.text.trim()}, time: ${_timeController.text.trim()}",
-                      "New Appointment");
-                });
+                    String token = snap['token'];
+                    print("HELLO:${token}");
+
+                    sendPushMessage(
+                        token,
+                        "You have a new Appoitment Details : ${_nameController.text.trim()}, Date: ${_dateController.text.trim()}, time: ${_timeController.text.trim()}",
+                        "New Appointment");
+                  });
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Color(0xFF0074d9),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> checkIfTimeAlreadyScheduled(String time, String date) async {
+    // Query Firestore to check if the time is already scheduled
+    QuerySnapshot scheduleSnapshot = await FirebaseFirestore.instance
+        .collection("schedules")
+        .where("date", isEqualTo: date)
+        .where("time", isEqualTo: time)
+        .get();
+
+    return scheduleSnapshot.docs.isNotEmpty;
+  }
+
+  void _showTimeAlreadyScheduledWarning(BuildContext context) {
+    // Show a warning dialog if the time is already scheduled
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Warning',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0074d9),
+            ),
+          ),
+          content: Text('The selected time is already scheduled.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text(
                 'OK',
                 style: TextStyle(
-                    color: Color(0xFF0074d9), fontWeight: FontWeight.bold),
+                  color: Color(0xFF0074d9),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -658,6 +810,7 @@ class _PatientFormState extends State<schedulList> {
       person_name: _nameController.text.trim(),
       date: _dateController.text.trim(),
       time: _timeController.text.trim(),
+      phone: _phoneController.text.trim(),
       confirmed: _confirmedController.text.trim(),
     );
     final json = schedule.toJson();
@@ -695,16 +848,15 @@ class _PatientFormState extends State<schedulList> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     ))!;
 
-    if (picked != null && picked != selectedDate) {
+    if (picked != null && picked != _selectedDate) {
       setState(() {
-        selectedDate = picked;
-        _dateController.text = "${picked.toLocal()}"
-            .split(' ')[0]; // Format the selected date as needed.
+        _selectedDate = picked;
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
     }
   }

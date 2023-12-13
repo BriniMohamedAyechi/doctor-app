@@ -1,198 +1,115 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:healthcare/screens/login_screen.dart';
-import 'package:healthcare/screens/welcome_screen.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
+  @override
+  _SettingScreenState createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _saveChanges() {
+    if (_formKey.currentState!.validate()) {
+      // Implement your logic to save changes
+      print('Changes saved: '
+          'Name: ${_nameController.text}, '
+          'Phone: ${_phoneController.text}, '
+          'Email: ${_emailController.text}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Settings",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 30),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 30,
-              backgroundImage: AssetImage("images/doctor1.jpg"),
-            ),
-            title: Text(
-              "Welcome",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 25,
-              ),
-            ),
-            subtitle: Text("Profile"),
-          ),
-          Divider(height: 50),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                CupertinoIcons.person,
-                color: Colors.blue,
-                size: 35,
-              ),
-            ),
-            title: Text(
-              "Profile",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-          ),
-          SizedBox(height: 20),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.deepPurple.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.notifications_none_outlined,
-                color: Colors.deepPurple,
-                size: 35,
-              ),
-            ),
-            title: Text(
-              "Notifications",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-          ),
-          SizedBox(height: 20),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.indigo.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.privacy_tip_outlined,
-                color: Colors.indigo,
-                size: 35,
-              ),
-            ),
-            title: Text(
-              "Privacy",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-          ),
-          SizedBox(height: 20),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.green.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.settings_suggest_outlined,
-                color: Colors.green,
-                size: 35,
-              ),
-            ),
-            title: Text(
-              "General",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-          ),
-          SizedBox(height: 20),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.info_outline_rounded,
-                color: Colors.orange,
-                size: 35,
-              ),
-            ),
-            title: Text(
-              "About Us",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-          ),
-          Divider(height: 40),
-          ListTile(
-            onTap: () {},
-            leading: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.redAccent.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.info_outline_rounded,
-                color: Colors.redAccent,
-                size: 35,
-              ),
-            ),
-            title: GestureDetector(
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Material(
-                        child:
-                            WelcomeScreen(), // Replace YourHomePage with the page you want to navigate to
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Text(
-                "Log Out",
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Settings"),
+        backgroundColor: Color(0xFF0074d9),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Settings",
                 style: TextStyle(
+                  fontSize: 30,
                   fontWeight: FontWeight.w500,
-                  fontSize: 20,
                 ),
               ),
-            ),
+              SizedBox(height: 30),
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  prefixIcon: Icon(Icons.person),
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  prefixIcon: Icon(Icons.phone),
+                ),
+                validator: (value) {
+                  // You can add phone number validation logic here
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.email),
+                ),
+                validator: (value) {
+                  if (value!.isEmpty || !value.contains('@')) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveChanges,
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF0074d9),
+                  onPrimary: Colors.white,
+                ),
+                child: Text('Save Changes'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

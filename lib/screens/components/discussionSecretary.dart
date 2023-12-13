@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthcare/constants/constants.dart';
 import 'package:healthcare/models/scheduleModel.dart';
 import 'package:healthcare/screens/components/discussion_info_detail.dart';
+import 'package:healthcare/screens/components/discussion_info_secretary.dart';
 import 'package:healthcare/screens/schedulList.dart';
 
-class Discussions extends StatelessWidget {
-  const Discussions({Key? key}) : super(key: key);
+class DiscussionsSecretary extends StatelessWidget {
+  const DiscussionsSecretary({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +25,11 @@ class Discussions extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Upcoming Appointments',
+                'Appointments',
                 style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
               TextButton(
@@ -83,7 +84,8 @@ class Discussions extends StatelessWidget {
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: schedules.length,
-                  itemBuilder: (context, index) => DiscussionInfoDetail(
+                  itemBuilder: (context, index) =>
+                      DiscussionInfoDetailSecretary(
                     schedule: schedules[index],
                   ),
                 );

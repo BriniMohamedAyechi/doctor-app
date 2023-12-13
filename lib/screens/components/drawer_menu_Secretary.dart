@@ -5,11 +5,12 @@ import 'package:healthcare/screens/aiAgent.dart';
 import 'package:healthcare/screens/components/drawer_list_tile.dart';
 import 'package:healthcare/screens/messages_screen.dart';
 import 'package:healthcare/screens/patientsList.dart';
+import 'package:healthcare/screens/patientsListSecretary.dart';
 import 'package:healthcare/screens/schedulList.dart';
 import 'package:healthcare/screens/welcome_screen.dart';
 
-class DrawerMenu extends StatelessWidget {
-  const DrawerMenu({Key? key}) : super(key: key);
+class DrawerMenuSecretary extends StatelessWidget {
+  const DrawerMenuSecretary({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class DrawerMenu extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) {
                       return Material(
-                        child: patientsList(),
+                        child: patientsListSecretary(),
                       );
                     },
                   ),
@@ -83,6 +84,22 @@ class DrawerMenu extends StatelessWidget {
               thickness: 0.2,
             ),
           ),
+          DrawerListTile(
+              title: 'Logout',
+              svgSrc: 'assets/icons/Logout.svg',
+              tap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Material(
+                        child:
+                            WelcomeScreen(), // Replace YourHomePage with the page you want to navigate to
+                      );
+                    },
+                  ),
+                );
+              }),
         ],
       ),
     );

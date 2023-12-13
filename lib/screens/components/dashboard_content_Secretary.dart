@@ -5,6 +5,8 @@ import 'package:healthcare/constants/responsive.dart';
 import 'package:healthcare/screens/components/analytic_cards.dart';
 import 'package:healthcare/screens/components/analytic_info_card.dart';
 import 'package:healthcare/screens/components/custom_appbar.dart';
+import 'package:healthcare/screens/components/discussionSecretary.dart';
+import 'package:healthcare/screens/components/toDolistSecretary.dart';
 import 'package:healthcare/screens/components/top_referals.dart';
 import 'package:healthcare/screens/components/users.dart';
 import 'package:healthcare/screens/components/users_by_device.dart';
@@ -12,8 +14,8 @@ import 'package:healthcare/screens/components/viewers.dart';
 
 import 'discussions.dart';
 
-class DashboardContent extends StatelessWidget {
-  const DashboardContent({Key? key}) : super(key: key);
+class DashboardContentSecretary extends StatelessWidget {
+  const DashboardContentSecretary({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,8 @@ class DashboardContent extends StatelessWidget {
                             SizedBox(
                               height: appPadding,
                             ),
-                          if (Responsive.isMobile(context)) Discussions(),
+                          if (Responsive.isMobile(context))
+                            DiscussionsSecretary(),
                         ],
                       ),
                     ),
@@ -55,7 +58,7 @@ class DashboardContent extends StatelessWidget {
                     if (!Responsive.isMobile(context))
                       Expanded(
                         flex: 2,
-                        child: Discussions(),
+                        child: DiscussionsSecretary(),
                       ),
                   ],
                 ),
@@ -73,7 +76,7 @@ class DashboardContent extends StatelessWidget {
                             children: [
                               if (!Responsive.isMobile(context))
                                 Expanded(
-                                  child: ToDoList(),
+                                  child: ToDoListSecretary(),
                                   flex: 2,
                                 ),
                               if (!Responsive.isMobile(context))
@@ -94,7 +97,7 @@ class DashboardContent extends StatelessWidget {
                             SizedBox(
                               height: appPadding,
                             ),
-                          if (Responsive.isMobile(context)) ToDoList(),
+                          if (Responsive.isMobile(context)) ToDoListSecretary(),
                           if (Responsive.isMobile(context))
                             SizedBox(
                               height: appPadding,

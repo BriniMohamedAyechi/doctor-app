@@ -1,31 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthcare/constants/constants.dart';
-import 'package:healthcare/constants/responsive.dart';
-import 'package:healthcare/data/data.dart';
-
 import 'analytic_info_card.dart';
-
-class AnalyticCards extends StatelessWidget {
-  const AnalyticCards({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    return Container(
-      child: Responsive(
-        mobile: AnalyticInfoCardGridView(
-          crossAxisCount: size.width < 650 ? 2 : 4,
-          childAspectRatio: size.width < 650 ? 2 : 1.5,
-        ),
-        tablet: AnalyticInfoCardGridView(),
-        desktop: AnalyticInfoCardGridView(
-          childAspectRatio: size.width < 1400 ? 1.5 : 2.1,
-        ),
-      ),
-    );
-  }
-}
 
 class AnalyticInfoCardGridView extends StatelessWidget {
   const AnalyticInfoCardGridView({
@@ -39,19 +14,49 @@ class AnalyticInfoCardGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: analyticData.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: appPadding,
-        mainAxisSpacing: appPadding,
-        childAspectRatio: childAspectRatio,
-      ),
-      itemBuilder: (context, index) => AnalyticInfoCard(
-        info: analyticData[index],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Data",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount:
+              4, // Number of data types (e.g., patients, schedules, weather, date)
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return AnalyticInfoCard(
+                    info: AnalyticInfo('Patients', 'patients'));
+              case 1:
+                return AnalyticInfoCard(
+                    info: AnalyticInfo('Appointments', 'schedules'));
+              case 2:
+                return WeatherInfoCard();
+              case 3:
+                return DateInfoCard();
+              default:
+                return Container(); // Placeholder, you can modify this based on your needs
+            }
+          },
+        ),
+      ],
     );
   }
 }

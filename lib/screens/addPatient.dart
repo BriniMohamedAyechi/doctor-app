@@ -20,6 +20,8 @@ class _PatientFormState extends State<PatientForm> {
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController firstVisitedController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+
   final TextEditingController diseaseController = TextEditingController();
   final TextEditingController cinController = TextEditingController();
   String? imageUrl;
@@ -139,6 +141,33 @@ class _PatientFormState extends State<PatientForm> {
                       const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                 ),
                 controller: cinController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'CIN is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                cursorColor: Colors.black,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.deepPurple)),
+                  hintText: "Num CIN",
+                  icon: Icon(Icons.account_circle,
+                      size: 20, color: Colors.deepPurple),
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabled: true,
+                  contentPadding:
+                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                ),
+                controller: ageController,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'CIN is required';
@@ -279,6 +308,7 @@ class _PatientFormState extends State<PatientForm> {
       firstVisited: firstVisitedController.text.trim(),
       disease: diseaseController.text.trim(),
       phone: phoneController.text.trim(),
+      age: ageController.text.trim(),
       image: imageUrl,
       CIN: cinController.text.trim(),
     );

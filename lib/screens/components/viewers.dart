@@ -8,7 +8,8 @@ class Viewers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 440,
+      width: 1000,
       padding: EdgeInsets.all(appPadding),
       decoration: BoxDecoration(
         color: secondaryColor,
@@ -18,16 +19,19 @@ class Viewers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Viewers',
+            'Article of the Day',
             style: TextStyle(
               color: textColor,
               fontWeight: FontWeight.w700,
-              fontSize: 15,
+              fontSize: 20,
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
-            child: ViewLineChart(),
-          )
+            child: ArticleOfTheDayWidget(),
+          ),
         ],
       ),
     );

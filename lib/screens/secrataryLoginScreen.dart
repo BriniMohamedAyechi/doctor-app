@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:healthcare/controllers/controller.dart';
 import 'package:healthcare/firebase_authentication/firebase_auth_services.dart';
 import 'package:healthcare/screens/dash_board_screen.dart';
+import 'package:healthcare/screens/dashboard_screen_Secretary.dart';
 import 'package:healthcare/screens/sign_up_screen.dart';
 import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -169,7 +170,7 @@ class _loginScreenState extends State<secrataryLoginScreen> {
                     create: (context) => Controller(),
                   )
                 ],
-                child: DashBoardScreen(),
+                child: DashBoardScreenSecretary(),
               ),
             );
           },

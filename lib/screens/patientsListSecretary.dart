@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:healthcare/models/patientModel.dart';
 import 'package:healthcare/screens/aiAgent.dart';
 
-class patientsList extends StatefulWidget {
+class patientsListSecretary extends StatefulWidget {
   @override
-  _PatientsListState createState() => _PatientsListState();
+  _PatientsListSecretaryState createState() => _PatientsListSecretaryState();
 }
 
-class _PatientsListState extends State<patientsList> {
+class _PatientsListSecretaryState extends State<patientsListSecretary> {
   TextEditingController _searchController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
@@ -317,30 +317,6 @@ class _PatientsListState extends State<patientsList> {
                             SizedBox(
                               width: 10,
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return Material(
-                                        child: AiAgent(),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.local_hospital,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -387,7 +363,7 @@ class _PatientsListState extends State<patientsList> {
           ),
           content: Container(
             width: 350,
-            height: 400,
+            height: 350,
             child: Column(
               children: [
                 TextFormField(

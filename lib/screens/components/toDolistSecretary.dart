@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:healthcare/constants/constants.dart';
 
-class ToDoList extends StatelessWidget {
-  const ToDoList({Key? key}) : super(key: key);
+class ToDoListSecretary extends StatelessWidget {
+  const ToDoListSecretary({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,19 +10,22 @@ class ToDoList extends StatelessWidget {
     List<ToDoItem> toDoItems = [
       ToDoItem(
           title: 'Task 1',
-          description: 'Review today schedule and appointments.'),
+          description: 'Manage and organize doctor\'s schedule for the day.'),
       ToDoItem(
           title: 'Task 2',
-          description: 'Check and respond to urgent emails and messages.'),
+          description:
+              'Handle and respond to urgent emails, messages, and phone calls on behalf of the doctor.'),
       ToDoItem(
           title: 'Task 3',
-          description: 'Briefly review patient cases for the day'),
+          description: 'Review and summarize patient cases for the day.'),
       ToDoItem(
           title: 'Task 4',
-          description: 'Complete and sign administrative paperwork.'),
+          description:
+              'Complete and organize administrative paperwork for the doctor.'),
       ToDoItem(
           title: 'Task 5',
-          description: 'Ensure completion of necessary medical forms.'),
+          description:
+              'Ensure completion of necessary medical forms for upcoming appointments.'),
       // Add more To-Do items as needed
     ];
 
